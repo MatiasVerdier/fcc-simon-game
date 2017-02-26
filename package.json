@@ -1,0 +1,25 @@
+{
+  "name": "fcc-simon-game",
+  "version": "0.1.0",
+  "description": "freeCodeCamp Simon Game",
+  "main": "index.js",
+  "scripts": {
+    "start": "budo index.js:app.js --live",
+    "build": "browserify index.js -o app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matias Verdier",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-preset-es2015": "^6.22.0",
+    "babelify": "^7.3.0",
+    "browserify": "^14.1.0",
+    "budo": "^9.4.7"
+  },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  }
+}
