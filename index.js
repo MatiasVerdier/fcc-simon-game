@@ -54,3 +54,24 @@ function playSound(color) {
     buttons[color].el.classList.add('active');
     audio.play();
 }
+
+function generateSerie(size = 20) {
+    let colors = ['green', 'red', 'yellow', 'blue'];
+    let serie = [];
+    for (let i = 0; i < size; i++) {
+        let index = Math.floor(Math.random() * 4);
+        serie.push(colors[index]);
+    }
+
+    return serie;
+}
+
+function playSerie(serie, step = 1) {
+    if (step <= serie.length) {
+        for (let i = 0; i < step; i++) {
+            setTimeout(function (){
+                playSound(serie[i]);
+            }, 1000 * i + 1000);
+        }
+    }
+}
