@@ -39,15 +39,22 @@ for (let color in buttons) {
 
 // Get the board element
 let board = document.getElementById('board');
+let start = document.querySelector('.start');
 
 // Add event listener for handle click on the board buttons
 board.addEventListener('click', function(evt) {
-    let target = evt.target;
-    if (target && target.classList.contains('simon-button')) {
-        playSound(target.id);
+    if (SimonGame.gameStarted) {
+        let target = evt.target;
+        if (target && target.classList.contains('simon-button')) {
+            SimonGame.playPlayerStep(target.id);
+        }
     }
 });
 
+start.addEventListener('click', function(evt) {
+    this.innerHTML = 'Restart';
+    SimonGame.startGame();
+});
 
 function playSound(color) {
     let audio = buttons[color].sound;
@@ -66,12 +73,57 @@ function generateSerie(size = 20) {
     return serie;
 }
 
-function playSerie(serie, step = 1) {
-    if (step <= serie.length) {
-        for (let i = 0; i < step; i++) {
+function playSerie(serie, step = 0) {
+    if (step + 1 <= serie.length) {
+        for (let i = 0; i < step + 1; i++) {
             setTimeout(function (){
                 playSound(serie[i]);
             }, 1000 * i + 1000);
         }
     }
 }
+
+let SimonGame = {
+    gameStarted: false,
+    strictMode: false,
+    currentStep: 0,
+    serie: [],
+    serieSize: 20,
+    playerSerie: [],
+    playerStep: 0,
+    isPlayingSerie: false,
+    currentStepElement: document.querySelector('.current-step'),
+    startGame() {
+        this.serie = generateSerie(this.serieSize);
+        this.gameStarted = true;
+        this.currentStepElement.innerHTML = this.currentStep + 1;
+        playSerie(this.serie);
+    },
+    playPlayerStep(color) {
+        playSound(color);
+        this.playerSerie.push(color);
+        
+        if(this.playerSerie[this.playerStep] !== this.serie[this.playerStep]) {
+            this.currentStepElement.innerHTML = 'You Miss!!';
+            this.currentStep = 0;
+            this.playerSerie = [];
+            this.playerStep = 0;
+            setTimeout(() => {
+                this.currentStepElement.innerHTML = this.currentStep + 1;
+                playSerie(this.serie, this.currentStep);
+            }, 1000);
+        } else if (this.playerStep < this.currentStep) {
+            this.playerStep++;
+        } else {
+            this.currentStep++;
+            this.playerSerie = [];
+            this.playerStep = 0;
+            setTimeout(() => {
+                this.currentStepElement.innerHTML = this.currentStep + 1;
+                playSerie(this.serie, this.currentStep);
+            }, 500);
+        }
+    }
+}
+
+console.log(SimonGame);

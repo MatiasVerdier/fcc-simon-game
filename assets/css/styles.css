@@ -65,10 +65,14 @@
 }
 .start {
   color: #ecf0f1;
-  text-decoration: none;
+  cursor: pointer;
 }
 .start:hover {
   color: #bdc3c7;
+}
+.current-step {
+  display: inline-block;
+  padding: 5px 0;
 }
 
 .simon-button {
