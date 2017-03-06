@@ -43,7 +43,7 @@ let start = document.querySelector('.start');
 
 // Add event listener for handle click on the board buttons
 board.addEventListener('click', function(evt) {
-    if (SimonGame.gameStarted) {
+    if (SimonGame.gameStarted && !SimonGame.isPlayingSerie) {
         let target = evt.target;
         if (target && target.classList.contains('simon-button')) {
             SimonGame.playPlayerStep(target.id);
@@ -52,8 +52,10 @@ board.addEventListener('click', function(evt) {
 });
 
 start.addEventListener('click', function(evt) {
-    this.innerHTML = 'Restart';
-    SimonGame.startGame();
+    if (!SimonGame.isPlayingSerie) {
+        this.innerHTML = 'Restart';
+        SimonGame.startGame();
+    }
 });
 
 function playSound(color) {
@@ -75,9 +77,13 @@ function generateSerie(size = 20) {
 
 function playSerie(serie, step = 0) {
     if (step + 1 <= serie.length) {
+        SimonGame.isPlayingSerie = true;
         for (let i = 0; i < step + 1; i++) {
             setTimeout(function (){
                 playSound(serie[i]);
+                if (i === step) {
+                    SimonGame.isPlayingSerie = false;
+                }
             }, 1000 * i + 1000);
         }
     }
@@ -94,7 +100,10 @@ let SimonGame = {
     isPlayingSerie: false,
     currentStepElement: document.querySelector('.current-step'),
     startGame() {
-        this.serie = generateSerie(this.serieSize);
+        if (!this.serie.length) {
+            this.serie = generateSerie(this.serieSize);
+        }
+        this.currentStep = 0;
         this.gameStarted = true;
         this.currentStepElement.innerHTML = this.currentStep + 1;
         playSerie(this.serie);
@@ -105,7 +114,10 @@ let SimonGame = {
         
         if(this.playerSerie[this.playerStep] !== this.serie[this.playerStep]) {
             this.currentStepElement.innerHTML = 'You Miss!!';
-            this.currentStep = 0;
+            if (this.strictMode) {
+                this.serie = generateSerie(this.serieSize);
+                this.currentStep = 0;
+            }
             this.playerSerie = [];
             this.playerStep = 0;
             setTimeout(() => {
@@ -125,5 +137,3 @@ let SimonGame = {
         }
     }
 }
-
-console.log(SimonGame);
