@@ -104,6 +104,14 @@ let SimonGame = {
     playerStep: 0,
     isPlayingSerie: false,
     playSerieInterval: 1000,
+    winSerie: [
+        'green', 'red', 'blue', 'yellow',
+        'green', 'red', 'blue', 'yellow',
+        'blue', 'red', 'green', 'yellow',
+        'blue', 'red', 'green', 'yellow',
+        'green', 'red', 'blue', 'yellow',
+        'green', 'red', 'blue', 'yellow'
+    ],
     currentStepElement: document.querySelector('.current-step'),
     startGame() {
         if (!this.serie.length || this.currentStep + 1 === this.serieSize) {
@@ -139,6 +147,7 @@ let SimonGame = {
                 if (!this.isPlayingSerie) {
                     setTimeout(() => {
                         this.currentStepElement.innerHTML = 'You Win!!';
+                        playSerie(this.winSerie, this.winSerie.length - 1, 300);
                     }, this.playSerieInterval / 2);
                 }
             } else {
