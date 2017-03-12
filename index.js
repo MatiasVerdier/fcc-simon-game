@@ -105,8 +105,10 @@ let SimonGame = {
     isPlayingSerie: false,
     currentStepElement: document.querySelector('.current-step'),
     startGame() {
-        if (!this.serie.length) {
+        if (!this.serie.length || this.currentStep + 1 === this.serieSize) {
             this.serie = generateSerie(this.serieSize);
+            this.playerSerie = [];
+            this.playerStep = 0;
         }
         this.currentStep = 0;
         this.gameStarted = true;
@@ -117,7 +119,7 @@ let SimonGame = {
         playSound(color);
         this.playerSerie.push(color);
         
-        if(this.playerSerie[this.playerStep] !== this.serie[this.playerStep]) {
+        if (this.playerSerie[this.playerStep] !== this.serie[this.playerStep]) {
             this.currentStepElement.innerHTML = 'You Miss!!';
             if (this.strictMode) {
                 this.serie = generateSerie(this.serieSize);
@@ -132,13 +134,21 @@ let SimonGame = {
         } else if (this.playerStep < this.currentStep) {
             this.playerStep++;
         } else {
-            this.currentStep++;
-            this.playerSerie = [];
-            this.playerStep = 0;
-            setTimeout(() => {
-                this.currentStepElement.innerHTML = this.currentStep + 1;
-                playSerie(this.serie, this.currentStep);
-            }, 500);
+            if (this.currentStep + 1 === this.serieSize) {
+                if (!this.isPlayingSerie) {
+                    setTimeout(() => {
+                        this.currentStepElement.innerHTML = 'You Win!!';
+                    }, 500);
+                }
+            } else {
+                this.currentStep++;
+                this.playerSerie = [];
+                this.playerStep = 0;
+                setTimeout(() => {
+                    this.currentStepElement.innerHTML = this.currentStep + 1;
+                    playSerie(this.serie, this.currentStep);
+                }, 500);
+            }
         }
     }
 }
