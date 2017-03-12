@@ -80,7 +80,7 @@ function generateSerie(size = 20) {
     return serie;
 }
 
-function playSerie(serie, step = 0) {
+function playSerie(serie, step = 0, time = SimonGame.playSerieInterval) {
     if (step + 1 <= serie.length) {
         SimonGame.isPlayingSerie = true;
         for (let i = 0; i < step + 1; i++) {
@@ -89,7 +89,7 @@ function playSerie(serie, step = 0) {
                 if (i === step) {
                     SimonGame.isPlayingSerie = false;
                 }
-            }, 1000 * i + 1000);
+            }, time * i + time);
         }
     }
 }
@@ -103,6 +103,7 @@ let SimonGame = {
     playerSerie: [],
     playerStep: 0,
     isPlayingSerie: false,
+    playSerieInterval: 1000,
     currentStepElement: document.querySelector('.current-step'),
     startGame() {
         if (!this.serie.length || this.currentStep + 1 === this.serieSize) {
@@ -130,7 +131,7 @@ let SimonGame = {
             setTimeout(() => {
                 this.currentStepElement.innerHTML = this.currentStep + 1;
                 playSerie(this.serie, this.currentStep);
-            }, 1000);
+            }, this.playSerieInterval);
         } else if (this.playerStep < this.currentStep) {
             this.playerStep++;
         } else {
@@ -138,7 +139,7 @@ let SimonGame = {
                 if (!this.isPlayingSerie) {
                     setTimeout(() => {
                         this.currentStepElement.innerHTML = 'You Win!!';
-                    }, 500);
+                    }, this.playSerieInterval / 2);
                 }
             } else {
                 this.currentStep++;
@@ -147,7 +148,7 @@ let SimonGame = {
                 setTimeout(() => {
                     this.currentStepElement.innerHTML = this.currentStep + 1;
                     playSerie(this.serie, this.currentStep);
-                }, 500);
+                }, this.playSerieInterval / 2);
             }
         }
     }
