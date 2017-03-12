@@ -40,6 +40,7 @@ for (let color in buttons) {
 // Get the board element
 let board = document.getElementById('board');
 let start = document.querySelector('.start');
+let strict = document.querySelector('.strict-mode');
 
 // Add event listener for handle click on the board buttons
 board.addEventListener('click', function(evt) {
@@ -56,6 +57,10 @@ start.addEventListener('click', function(evt) {
         this.innerHTML = 'Restart';
         SimonGame.startGame();
     }
+});
+
+strict.addEventListener('click', function (evt) {
+    SimonGame.strictMode = this.checked;
 });
 
 function playSound(color) {

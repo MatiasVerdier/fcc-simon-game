@@ -66,6 +66,7 @@
 .start {
   color: #ecf0f1;
   cursor: pointer;
+  margin-bottom: 10px;
 }
 .start:hover {
   color: #bdc3c7;
